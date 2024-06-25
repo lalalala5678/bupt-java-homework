@@ -41,6 +41,31 @@ public class ChatServer {
         server.start();
 
         System.out.println("服务器启动，端口：" + PORT);
+
+        // 启动终端命令监听线程
+        new Thread(ChatServer::listenForCommands).start();
+    }
+
+    private static void listenForCommands() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.nextLine();
+            switch (command) {
+                case "listall":
+                    System.out.println("在线用户列表:");
+                    for (String user : onlineUsers) {
+                        System.out.println(user);
+                    }
+                    break;
+                case "quit":
+                    System.out.println("服务器即将关闭...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("未知命令: " + command);
+                    break;
+            }
+        }
     }
 
     static class LoginHandler implements HttpHandler {
