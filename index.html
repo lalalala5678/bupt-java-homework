@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="login-section">
+            <h2>登录</h2>
+            <form id="login-form">
+                <label for="username">用户名:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">密码:</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <button type="submit">登录</button>
+            </form>
+        </div>
+
+        <div id="chat-section" style="display:none;">
+            <h2>聊天室</h2>
+            <div id="chat-window">
+                <div id="messages"></div>
+            </div>
+            <form id="message-form">
+                <input type="text" id="message-input" placeholder="输入消息..." required>
+                <button type="submit">发送</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
