@@ -77,24 +77,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function sendMessage(message) {
         const sender = anonymousMode ? "匿名" : username;
+        const payload = {
+            username: sender,
+            type: message.type,
+            message: message.message
+        };
+
+        if (message.type === "private-message") {
+            payload.to = message.to;
+        }
+
         fetch("http://localhost:8000/send", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: `username=${encodeURIComponent(sender)}&message=${encodeURIComponent(message.message)}`
+            body: `username=${encodeURIComponent(sender)}&message=${encodeURIComponent(JSON.stringify(payload))}`
         }).catch(error => console.error("发送消息失败：", error));
     }
 
     function addMessage(user, message) {
-        if (user !== username && message.startsWith("@") && !message.startsWith(`@${username}`)) {
-            return;
-        }
+        const parsedMessage = JSON.parse(message);
 
-        const messageElement = document.createElement("div");
-        messageElement.textContent = `${user}: ${message}`;
-        messages.appendChild(messageElement);
-        messages.scrollTop = messages.scrollHeight;
+        if (parsedMessage.type === "private-message") {
+            if (parsedMessage.to === username || parsedMessage.username === username) {
+                const messageElement = document.createElement("div");
+                messageElement.textContent = `私聊 - ${parsedMessage.username}: ${parsedMessage.message}`;
+                messages.appendChild(messageElement);
+                messages.scrollTop = messages.scrollHeight;
+            }
+        } else {
+            const messageElement = document.createElement("div");
+            messageElement.textContent = `${parsedMessage.username}: ${parsedMessage.message}`;
+            messages.appendChild(messageElement);
+            messages.scrollTop = messages.scrollHeight;
+        }
     }
 
     function handleCommand(command) {
@@ -136,13 +153,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: `username=${encodeURIComponent(username)}`
             });
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-    
+
             const result = await response.json();
-    
+
             if (result.success) {
                 alert("已成功退出系统。");
                 loginSection.style.display = "block";
