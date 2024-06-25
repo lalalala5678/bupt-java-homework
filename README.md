@@ -23,8 +23,8 @@
 1. **克隆仓库：**
 
    ```bash
-   git clone <仓库地址>
-   cd <仓库目录>
+   git clone git@github.com:lalalala5678/bupt-java-homework.git
+   cd <你克隆的项目位置>
    ```
 
 2. **将 users.txt 文件放置在项目根目录：**
